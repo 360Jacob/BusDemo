@@ -1,0 +1,17 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+        maven { url 'https://jitpack.io' }
+    }
+}
+rootProject.name = "Demo"
+include ':app'
+include ':lib_base'
+include ':lib_log'
+include ':lib_common'
+include ':lib_data_service'
+include ':lib_domain'
+include ':lib_base_module'
