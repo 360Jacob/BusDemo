@@ -1,0 +1,69 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+apply from: "../base.build.gradle"
+
+android {
+    signingConfigs {    //签名设置
+        release {
+            storeFile file('jacob.keystore')
+            storePassword "jacob123456"
+            keyAlias "jacob"
+            keyPassword "jacob123456"
+        }
+    }
+    buildFeatures {
+        compose true
+        dataBinding true
+        viewBinding true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerVersion '1.5.21'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+
+    defaultConfig{
+        applicationId "com.jacob.demo"
+        multiDexEnabled true
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+        signingConfig signingConfigs.release
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
+
+}
+
+dependencies {
+    implementation project(":lib_base_module")
+    if (!isModule.toBoolean()) {
+        implementation project(':module_main')
+//        implementation project(':module_home')
+//        implementation project(':module_me')
+    }
+}

@@ -8,10 +8,11 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Demo"
-include ':app'
 include ':lib_base'
 include ':lib_log'
 include ':lib_common'
 include ':lib_data_service'
 include ':lib_domain'
 include ':lib_base_module'
+include ':module_main'
+include ':module_app'
