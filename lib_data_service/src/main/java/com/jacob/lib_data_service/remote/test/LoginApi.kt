@@ -8,18 +8,9 @@ import com.jacob.lib_domain.Demo
 class LoginApi: BaseApi<Demo>() {
 
 
-    init {
-        createService()
-    }
-
-
-    override fun createService() {
-        service =  RetrofitManager().create<RecipesService>()
-    }
-
-    override suspend fun loadData(params: MutableMap<String, String?>): Resource<Demo> {
-
-        return dealDataWhen(processCall {  service.login(params) })
+    override suspend fun loadData(params: HashMap<String, String>): Resource<Demo> {
+        var service = RetrofitManager().create<RecipesService>()
+        return dealDataWhen(processCall { service.login(params) })
     }
 
 }

@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlin.coroutines.CoroutineContext
 
-class BaseRepository {
-     val ioDispatcher: CoroutineContext = Dispatchers.IO
-     inline fun <reified T> dealDataFlow(crossinline block: suspend () -> T): Flow<T> {
+open class BaseRepository {
+    val ioDispatcher: CoroutineContext = Dispatchers.IO
+    inline fun <reified T> dealDataFlow(crossinline block: suspend () -> T): Flow<T> {
         return flow {
             emit(block.invoke())
         }.flowOn(ioDispatcher)

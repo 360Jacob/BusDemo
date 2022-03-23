@@ -1,6 +1,7 @@
 package com.jacob.lib_data_service.dto
 
 import com.jacob.lib_data_service.error.SUCCESS
+import com.jacob.lib_domain.entity.HomePageDataWrapperVo
 
 
 // A generic class that contains data and status about loading this data.

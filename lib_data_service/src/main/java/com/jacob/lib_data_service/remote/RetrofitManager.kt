@@ -48,16 +48,18 @@ class RetrofitManager {
         }
 
     init {
-        okHttpBuilder.addInterceptor(logger)
-        // 添加请求拦截器
-        okHttpBuilder.addInterceptor(RequestInterceptor())
-        // 添加相应数据拦截器
-        okHttpBuilder.addInterceptor(ResponseInterceptor())
-        // 添加配置增加拦截器
+
         val interceptors = NetConfig.getInterceptors()
         if (interceptors.isNotEmpty()) {
             interceptors.forEach { okHttpBuilder.addInterceptor(it) }
         }
+        okHttpBuilder.addInterceptor(logger)
+        // 添加请求拦截器
+//        okHttpBuilder.addInterceptor(RequestInterceptor())
+        // 添加相应数据拦截器
+        okHttpBuilder.addInterceptor(ResponseInterceptor())
+        // 添加配置增加拦截器
+
         // 添加网络拦截器
         val networkInterceptors = NetConfig.getNetworkInterceptors()
         if (networkInterceptors.isNotEmpty()) {
@@ -73,7 +75,7 @@ class RetrofitManager {
         if (NetConfig.isEnableHttps()) {
             //给client的builder添加了增加可以忽略SSL
             val sslParams = SSLContextUtil.getSslSocketFactory()
-            okHttpBuilder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
+            okHttpBuilder.sslSocketFactory(sslParams?.sSLSocketFactory!!, sslParams.trustManager!!)
             okHttpBuilder.hostnameVerifier(SSLContextUtil.UnSafeHostnameVerifier)
         }
 

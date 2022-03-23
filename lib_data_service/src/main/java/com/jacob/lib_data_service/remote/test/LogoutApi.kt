@@ -6,11 +6,9 @@ import com.jacob.lib_data_service.remote.service.RecipesService
 import com.jacob.lib_domain.Demo
 
 class LogoutApi: BaseApi<Demo>() {
-    override fun createService() {
-        service =  RetrofitManager().create<RecipesService>()
-    }
 
-    override suspend fun loadData(params: MutableMap<String, String?>): Resource<Demo> {
-        return dealDataWhen(processCall {  service.logout(params) })
+    override suspend fun loadData(params: HashMap<String, String>): Resource<Demo> {
+        var service = RetrofitManager().create<RecipesService>()
+        return dealDataWhen(processCall { service.logout(params) })
     }
 }

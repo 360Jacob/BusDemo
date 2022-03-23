@@ -1,6 +1,7 @@
 package com.jacob.lib_data_service.remote.interceptor
 
 import android.text.TextUtils
+import android.util.Log
 import com.jacob.lib_data_service.config.Encoding
 import com.jacob.lib_data_service.config.NetAppContext
 import com.jacob.lib_data_service.config.contentTypeValue
@@ -15,8 +16,18 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Response
 import okhttp3.ResponseBody
+import okhttp3.internal.http.RealResponseBody
+import okhttp3.internal.http.hasBody
+import okio.BufferedSource
+import okio.GzipSource
+import okio.buffer
 import org.json.JSONObject
 import java.nio.charset.Charset
+import android.R.string
+import android.util.Xml
+import com.google.gson.Gson
+import com.jacob.lib_domain.base.BaseResponse
+
 
 /**
  * Describe:
@@ -50,11 +61,18 @@ class ResponseInterceptor : Interceptor {
                 throw ApiException(NULL_DATA, errorManager.getError(NULL_DATA).description)
             }
             val jsonObject = JSONObject(body)
-            val status = jsonObject.getString("status").toInt()
-            val message = jsonObject.getString("message")
+
+            val resp = jsonObject.getJSONObject("response")
+            val status = resp.getInt("code")
+            val message = resp.getString("msg")
             if (0 == status) {
                 response.newBuilder()
-                    .body(ResponseBody.create(contentTypeValue.toMediaTypeOrNull(), body))
+                    .body(
+                        ResponseBody.create(
+                            contentTypeValue.toMediaTypeOrNull(),
+                            Gson().toJson(resp)
+                        )
+                    )
                     .build()
             } else {
                 throw ApiException(status, message ?: "")
@@ -70,4 +88,5 @@ class ResponseInterceptor : Interceptor {
         val buffer = source.buffer()
         return buffer.clone().readString(Charset.forName(Encoding))
     }
+
 }

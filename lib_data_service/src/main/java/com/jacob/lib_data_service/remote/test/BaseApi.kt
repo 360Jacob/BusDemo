@@ -18,24 +18,20 @@ import java.io.IOException
 
 
 abstract class BaseApi<T> {
-   var networkConnectivity = NetworkHelper(NetAppContext.getContext())
-   private val errorManager by lazy { ErrorManager(ErrorMapper()) }
-    lateinit var service: RecipesService
-    init {
-        createService()
-    }
-   abstract fun createService()
-    abstract suspend fun loadData(params: MutableMap<String, String?>): Resource<T>
+    var networkConnectivity = NetworkHelper(NetAppContext.getContext())
+    private val errorManager by lazy { ErrorManager(ErrorMapper()) }
 
-   /**
-    * 数据结构体的返回处理
-    */
+    abstract suspend fun loadData(params: HashMap<String, String>): Resource<T>
+
+    /**
+     * 数据结构体的返回处理
+     */
     suspend fun processCall(responseCall: suspend () -> Response<*>): Any? {
-      if (!networkConnectivity.isConnected()) {
-         //若当前客户端未打开数据连接开关
-         return showToast(NOT_NETWORD)
-      }
-      return try {
+        if (!networkConnectivity.isConnected()) {
+            //若当前客户端未打开数据连接开关
+            return showToast(NOT_NETWORD)
+        }
+        return try {
          val response = responseCall.invoke()
          if (response.code() in SUCCESS until UNAUTHORIZED) {
             response.body()

@@ -1,54 +1,81 @@
 package com.jacob.module_main
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.jacob.module_main.ui.theme.DemoTheme
+import android.util.Log
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.jacob.lib_base.view.BaseMvvmDataBindingActivity
+import com.jacob.lib_data_service.dto.Resource
+import com.jacob.lib_data_service.utils.ext.launch
+import com.jacob.lib_data_service.utils.ext.observe
+import com.jacob.lib_domain.entity.HomePageDataWrapperVo
+import com.jacob.lib_log.KLog
+import com.jacob.module_main.databinding.ActivityMainBinding
+import com.jacob.module_main.viewmodel.MainViewModel
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.jacob.lib_data_service.remote.home.repository.HomeRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
-class MainActivity : ComponentActivity() {
+
+class MainActivity : AppCompatActivity() {
+
+//
+//    override fun onBindLayout(): Int = R.layout.activity_main
+//
+//    override fun initView() {
+//
+//    }
+//
+//    override fun initData() {
+//        mViewModel.queryHomePageBizData()
+//    }
+//
+//    override fun onBindViewModel(): Class<MainViewModel> = MainViewModel::class.java
+//
+//    override fun initViewObservable() {
+//        observe(mViewModel.homePageDataWrapperLiveData, ::handleHomePageData)
+//    }
+//
+//    override fun onBindVariableId(): MutableList<Pair<Int, Any>> {
+//        return arrayListOf(BR._all to mViewModel)
+//    }
+
+    private lateinit var mViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            DemoTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Scaffold {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(text = "hello world")
-                        }
+        setContentView(R.layout.activity_main)
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-                    }
-                }
+        var tvTitle = findViewById<TextView>(R.id.tv_title)
+        tvTitle.setOnClickListener {
+//            GlobalScope.launch(){
+//            HomeRepository().queryHomePageBizData()
+//                .collect {
+//                    it.data.apply {
+//                        KLog.e(Gson().toJson(it))
+//                    }
+//                }
+//        }
+            mViewModel.queryHomePageBizData()
+        }
+
+    }
+
+    private fun handleHomePageData(resource: Resource<HomePageDataWrapperVo>) {
+        resource.launch {
+            it?.apply {
+                it.appBizTypeList?.get(0)?.bizTypeName?.let { it1 -> KLog.e(it1) }
             }
         }
     }
+
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    DemoTheme {
-        Greeting("Android")
-    }
-}

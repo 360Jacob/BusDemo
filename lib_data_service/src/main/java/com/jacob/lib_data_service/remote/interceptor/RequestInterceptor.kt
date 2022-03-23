@@ -7,6 +7,7 @@ import com.jacob.lib_data_service.config.contentTypeValue
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit
  */
 class RequestInterceptor : Interceptor {
 
+
     companion object {
         val TAG: String = RequestInterceptor::class.java.simpleName
     }
@@ -23,7 +25,8 @@ class RequestInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
 
-        val url = original.url.toString()
+        val httpUrl = original.url.toString()
+
 
         val newRequestBuilder = original.newBuilder()
             // .removeHeader("User-Agent")

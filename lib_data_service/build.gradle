@@ -2,11 +2,10 @@ apply plugin: 'com.android.library'
 apply from: "../base.build.gradle"
 
 android {
-
 }
 
 dependencies {
-
+    api project(":lib_base")
     api project(":lib_log")
     api project(':lib_domain')
 

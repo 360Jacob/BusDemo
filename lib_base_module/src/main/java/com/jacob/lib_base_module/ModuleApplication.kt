@@ -1,6 +1,8 @@
 package com.jacob.lib_base_module
 
 import com.jacob.lib_base.BaseApplication
+import com.jacob.lib_base_module.api.GzipRequestInterceptor
+import com.jacob.lib_base_module.api.HeaderInterceptor
 import com.jacob.lib_common.URL_BASE
 import com.jacob.lib_data_service.config.NetConfig
 
@@ -16,8 +18,12 @@ open class ModuleApplication : BaseApplication() {
     }
 
     private fun initNet() {
+//        var url = "https://demoapp.xmparking.net/"+"merchant_bus_web_app/bus/"
+        var url = "https://demoapp.xmparking.net/merchant_bus_web_app/bus/"
         val config = NetConfig.Builder()
-            .setBaseUrl(URL_BASE)
+            .setBaseUrl(url)
+            .addInterceptor(HeaderInterceptor())
+//            .addInterceptor(GzipRequestInterceptor())
             .build()
         config.initContext(this)
     }

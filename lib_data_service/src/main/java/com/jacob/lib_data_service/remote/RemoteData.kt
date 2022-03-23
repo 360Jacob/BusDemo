@@ -10,15 +10,16 @@
 //import com.jacob.lib_data_service.error.mapper.ErrorMapper
 //import com.jacob.lib_data_service.remote.RemoteDataSource
 //import com.jacob.lib_data_service.remote.RetrofitManager
-//import com.jacob.lib_data_service.remote.service.RecipesService
+//import com.jacob.lib_data_service.remote.home.service.HomeService
 //import com.jacob.lib_data_service.utils.NetworkConnectivity
 //import com.jacob.lib_data_service.utils.NetworkHelper
 //import com.jacob.lib_data_service.utils.ThreadUtils
 //import com.jacob.lib_data_service.utils.ext.view.showToast
-//import com.jacob.lib_domain.Demo
+//import com.jacob.lib_domain.entity.HomePageDataWrapperVo
 //import com.jacob.lib_log.KLog
-//import retrofit2.Response
+//import kotlinx.coroutines.flow.Flow
 //import java.io.IOException
+//import kotlin.reflect.KSuspendFunction2
 //
 //
 ///**
@@ -34,13 +35,19 @@
 ////        //创建接口服务
 ////        val recipesService = retrofitManager.create<RecipesService>()
 ////
-////        return dealDataWhen(processCall(recipesService::fetchTemp))
+////        return dealDataWhen(processCall(recipesService::login))
 ////    }
+//
+//    override suspend fun queryHomePageBizData(): Flow<Resource<HomePageDataWrapperVo>> {
+//        retrofitManager.create<HomeService>()
+//        processCall(HomeService::queryHomePageBizData)
+//        return dealDataWhen()
+//    }
 //
 //    /**
 //     * 数据结构体的返回处理
 //     */
-//    private suspend fun processCall(responseCall: suspend () -> Response<*>): Any? {
+//    private suspend fun processCall(responseCall: KSuspendFunction2<HomeService, HashMap<String, String>, Resource<HomePageDataWrapperVo>>): Any? {
 //        if (!networkConnectivity.isConnected()) {
 //            //若当前客户端未打开数据连接开关
 //            return showToast(NOT_NETWORD)

@@ -17,7 +17,7 @@ android {
     // 每个单独的 module库build可进行单独自定义配置相关文件信息
 
     buildFeatures {
-        dataBinding true
+//        dataBinding true
         viewBinding true
     }
     sourceSets {
