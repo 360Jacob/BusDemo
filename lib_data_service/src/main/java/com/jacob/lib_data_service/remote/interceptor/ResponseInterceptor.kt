@@ -26,6 +26,8 @@ import java.nio.charset.Charset
 import android.R.string
 import android.util.Xml
 import com.google.gson.Gson
+import com.jacob.lib_data_service.dto.Resource
+import com.jacob.lib_domain.base.BaseResp
 import com.jacob.lib_domain.base.BaseResponse
 
 
@@ -60,17 +62,20 @@ class ResponseInterceptor : Interceptor {
             if (TextUtils.isEmpty(body) || "null".equals(body, ignoreCase = true)) {
                 throw ApiException(NULL_DATA, errorManager.getError(NULL_DATA).description)
             }
+           var respTemp = Gson().fromJson(body,BaseResp::class.java)
             val jsonObject = JSONObject(body)
 
             val resp = jsonObject.getJSONObject("response")
             val status = resp.getInt("code")
             val message = resp.getString("msg")
+            Log.e(TAG, "--->"+body)
+            Log.e(TAG, "--->"+respTemp.response)
             if (0 == status) {
                 response.newBuilder()
                     .body(
                         ResponseBody.create(
                             contentTypeValue.toMediaTypeOrNull(),
-                            Gson().toJson(resp)
+                           Gson().toJson( respTemp.response)
                         )
                     )
                     .build()
