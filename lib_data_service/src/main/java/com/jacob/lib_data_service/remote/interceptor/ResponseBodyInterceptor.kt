@@ -1,5 +1,7 @@
 package com.jacob.lib_data_service.remote.interceptor
 
+import com.jacob.lib_data_service.error.mapper.ErrorManager
+import com.jacob.lib_data_service.error.mapper.ErrorMapper
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer
@@ -8,7 +10,11 @@ import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 
 abstract class ResponseBodyInterceptor : Interceptor {
+    companion object {
+        val TAG: String = this::class.java.simpleName
+    }
 
+    val errorManager: ErrorManager = ErrorManager(ErrorMapper())
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url.toString()

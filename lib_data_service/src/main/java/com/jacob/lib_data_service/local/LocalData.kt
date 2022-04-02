@@ -12,20 +12,24 @@ class LocalData constructor() {
     private val appDatabase by lazy { AppDatabase.getDatabase(NetAppContext.getContext()) }
 
     fun getUserTestRoom(): Resource<List<UserTestRoom>> {
-        return Resource.Success(appDatabase.userTestRoomDao().loadAllUserTestRooms())
+        return Resource.Success(appDatabase.userTestRoomDao().loadAllUserTestRooms(), "获取用户信息成功")
     }
 
     fun insertUserTestRoom(userTestRoom: UserTestRoom): Resource<Long> {
         return Resource.Success(
-            appDatabase.userTestRoomDao().insertUserTestRoom(userTestRoom = userTestRoom)
+            appDatabase.userTestRoomDao().insertUserTestRoom(userTestRoom = userTestRoom),
+            "新增数据成功"
         )
     }
 
     fun doLogin(): Resource<String> {
-        return Resource.Success("String")
+        return Resource.Success("String", "")
     }
 
     fun removeUserTestRoom(userTestRoom: UserTestRoom): Resource<Int> {
-        return Resource.Success(appDatabase.userTestRoomDao().deleteUserTestRoom(userTestRoom))
+        return Resource.Success(
+            appDatabase.userTestRoomDao().deleteUserTestRoom(userTestRoom),
+            "测试删除数据成功"
+        )
     }
 }

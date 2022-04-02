@@ -1,4 +1,4 @@
-package com.jacob.lib_data_service.remote.test
+package com.jacob.lib_data_service.remote.base
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

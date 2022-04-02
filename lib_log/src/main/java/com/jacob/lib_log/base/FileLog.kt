@@ -5,7 +5,6 @@ import java.io.*
 import java.util.*
 
 /**
- * Created by zhaokaiqiang on 15/11/18.
  */
 object FileLog {
 

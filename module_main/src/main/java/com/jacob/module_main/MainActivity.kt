@@ -55,28 +55,9 @@ class MainActivity : AppCompatActivity() {
 
         var tvTitle = findViewById<TextView>(R.id.tv_title)
         tvTitle.setOnClickListener {
-//            mViewModel.queryHomePageBizData()
-            GlobalScope.launch {
-                flow {
-                    var temp = RetrofitManager().create(HomeService::class.java)
-                        .queryHomePageBizData1(HashMap())
-                    emit(temp)
-                }.flowOn(Dispatchers.IO)  //指定网络请求的线程
-                    .collect {
-                        var tempStr = Gson().toJson(it?.response)
-                        Log.e("MainActivity", "--->" + tempStr)
-
-                    }
-            }
+            mViewModel.queryHomePageBizData()
         }
 
-    }
-    private fun handleHomePageData(resource: Resource<HomePageDataWrapperVo>) {
-//        resource.launch {
-//            it?.apply {
-//                it.appBizTypeList?.get(0)?.bizTypeName?.let { it1 -> KLog.e(it1) }
-//            }
-//        }
     }
 
 }

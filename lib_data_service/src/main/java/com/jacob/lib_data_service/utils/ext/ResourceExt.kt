@@ -25,8 +25,8 @@ fun <T> Resource<T>.launch(
         is Resource.Success -> success(data)
         is Resource.Loading -> loading?.invoke()
         else -> {
-            this.errorCode.let { KLog.e("Resource", "--------->$it") }
-            fail?.let { it(errorCode) }
+            this.code.let { KLog.e("Resource", "--------->$it") }
+            fail?.let { it(code) }
         }
     }
 }

@@ -2,9 +2,6 @@ package com.jacob.lib_data_service.remote
 
 import com.jacob.lib_data.BuildConfig
 import com.jacob.lib_data_service.config.NetConfig
-import com.jacob.lib_data_service.remote.interceptor.RequestInterceptor
-import com.jacob.lib_data_service.remote.interceptor.ResponseBodyInterceptor
-import com.jacob.lib_data_service.remote.interceptor.ResponseInterceptor
 import com.jacob.lib_data_service.remote.interceptor.ResponseInterceptorNew
 import com.jacob.lib_data_service.remote.moshiFactories.MyKotlinJsonAdapterFactory
 import com.jacob.lib_data_service.remote.moshiFactories.MyStandardJsonAdapters
@@ -14,7 +11,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 /**
@@ -56,7 +52,7 @@ class RetrofitManager {
         if (interceptors.isNotEmpty()) {
             interceptors.forEach { okHttpBuilder.addInterceptor(it) }
         }
-//        okHttpBuilder.addInterceptor(logger)
+        okHttpBuilder.addInterceptor(logger)
         // 添加请求拦截器
 //        okHttpBuilder.addInterceptor(RequestInterceptor())
         // 添加相应数据拦截器

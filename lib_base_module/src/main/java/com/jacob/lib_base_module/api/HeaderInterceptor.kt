@@ -2,8 +2,6 @@ package com.jacob.lib_base_module.api
 
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
-import androidx.compose.ui.text.toLowerCase
 import com.google.gson.Gson
 import com.jacob.lib_base.BaseApplication
 import com.jacob.lib_base.utils.TimeUtils

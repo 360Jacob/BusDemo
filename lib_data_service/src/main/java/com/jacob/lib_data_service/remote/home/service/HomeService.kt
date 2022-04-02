@@ -12,7 +12,7 @@ import retrofit2.http.QueryMap
 
 interface HomeService {
     @POST("pub/app/operate/homePageBizData")
-    suspend fun queryHomePageBizData(@QueryMap params: HashMap<String, String>): Response<Resource<HomePageDataWrapperVo>>
+    suspend fun queryHomePageBizData(@QueryMap params: HashMap<String, String>): Response<BaseResp<BaseResponse<HomePageDataWrapperVo>>>
 
     @POST("pub/app/operate/homePageBizData")
     suspend fun queryHomePageBizData1(@QueryMap params: HashMap<String, String>): BaseResp<BaseResponse<HomePageDataWrapperVo>>

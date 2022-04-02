@@ -1,4 +1,4 @@
-package com.jacob.lib_data_service.remote.test
+package com.jacob.lib_data_service.remote.base
 
 import android.text.TextUtils
 import com.jacob.lib_data.BuildConfig
@@ -7,12 +7,12 @@ import com.jacob.lib_data_service.dto.Resource
 import com.jacob.lib_data_service.error.*
 import com.jacob.lib_data_service.error.mapper.ErrorManager
 import com.jacob.lib_data_service.error.mapper.ErrorMapper
-import com.jacob.lib_data_service.remote.service.RecipesService
+import com.jacob.lib_data_service.remote.RetrofitManager
 import com.jacob.lib_data_service.utils.NetworkHelper
 import com.jacob.lib_data_service.utils.ThreadUtils
 import com.jacob.lib_data_service.utils.ext.view.showToast
+import com.jacob.lib_domain.base.BaseResp
 import com.jacob.lib_domain.base.BaseResponse
-import com.jacob.lib_domain.entity.HomePageDataWrapperVo
 import com.jacob.lib_log.KLog
 import retrofit2.Response
 import java.io.IOException
@@ -21,7 +21,7 @@ import java.io.IOException
 abstract class BaseApi<T> {
     var networkConnectivity = NetworkHelper(NetAppContext.getContext())
     private val errorManager by lazy { ErrorManager(ErrorMapper()) }
-
+    val retrofit = RetrofitManager()
     abstract suspend fun loadData(params: HashMap<String, String>): Resource<T>
 
     /**
@@ -34,8 +34,18 @@ abstract class BaseApi<T> {
         }
         return try {
          val response = responseCall.invoke()
+
          if (response.code() in SUCCESS until UNAUTHORIZED) {
-            response.body()
+             when (response.body()) {
+                 is BaseResp<*> -> {
+                     var temp: BaseResp<*> = response.body() as BaseResp<*>
+                     temp.response
+                 }
+                 else -> {
+                     response.body()
+                 }
+             }
+
          } else {
             when (response.code()) {
                UNAUTHORIZED -> showToast(UNAUTHORIZED)
@@ -48,29 +58,32 @@ abstract class BaseApi<T> {
             }
          }
       } catch (e: IOException) {
-         if (BuildConfig.DEBUG) {
-            ThreadUtils.runOnUiThread {
-               e.message?.showToast()
+            if (BuildConfig.DEBUG) {
+                ThreadUtils.runOnUiThread {
+                    e.message?.showToast()
+                }
+                KLog.e("RemoteData", e)
             }
-            KLog.e("RemoteData", e)
-         }
-         showToast(NETWORD_ERROR)
-      }
-   }
+            showToast(NETWORD_ERROR)
+        }
+    }
 
-   /**
-    * 处理相应结果
-    */
+    /**
+     * 处理相应结果
+     */
     inline fun <reified T> dealDataWhen(any: Any?): Resource<T> {
-      return when (any) {
-         is BaseResponse<*> -> {
-            Resource.Success(data = toAs(if (any.data != null) any.data else any.msg))
-         }
-         else -> {
-            Resource.DataError(errorCode = toAs(any))
-         }
-      }
-   }
+        return when (any) {
+            is BaseResponse<*> -> {
+                Resource.Success(
+                    data = toAs(if (any.data != null) any.data else any.msg),
+                    any.msg as String
+                )
+            }
+            else -> {
+                Resource.DataError(code = toAs(any), "")
+            }
+        }
+    }
 
    /**
     * 类型转换
