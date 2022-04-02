@@ -4,24 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.jacob.lib_base.view.BaseMvvmDataBindingActivity
-import com.jacob.lib_data_service.dto.Resource
-import com.jacob.lib_data_service.utils.ext.launch
-import com.jacob.lib_data_service.utils.ext.observe
-import com.jacob.lib_domain.entity.HomePageDataWrapperVo
-import com.jacob.lib_log.KLog
-import com.jacob.module_main.databinding.ActivityMainBinding
-import com.jacob.module_main.viewmodel.MainViewModel
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.jacob.lib_data_service.remote.home.repository.HomeRepository
+import com.jacob.lib_data_service.dto.Resource
+import com.jacob.lib_data_service.remote.RetrofitManager
+import com.jacob.lib_data_service.remote.home.service.HomeService
+import com.jacob.lib_data_service.utils.ext.launch
+import com.jacob.lib_domain.base.BaseResp
+import com.jacob.lib_domain.base.BaseResponse
+import com.jacob.lib_domain.entity.HomePageDataWrapperVo
+import com.jacob.module_main.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 
 
 class MainActivity : AppCompatActivity() {
@@ -56,25 +55,28 @@ class MainActivity : AppCompatActivity() {
 
         var tvTitle = findViewById<TextView>(R.id.tv_title)
         tvTitle.setOnClickListener {
-//            GlobalScope.launch(){
-//            HomeRepository().queryHomePageBizData()
-//                .collect {
-//                    it.data.apply {
-//                        KLog.e(Gson().toJson(it))
-//                    }
-//                }
-//        }
-            mViewModel.queryHomePageBizData()
+//            mViewModel.queryHomePageBizData()
+            GlobalScope.launch {
+                flow {
+                    var temp = RetrofitManager().create(HomeService::class.java)
+                        .queryHomePageBizData1(HashMap())
+                    emit(temp)
+                }.flowOn(Dispatchers.IO)  //指定网络请求的线程
+                    .collect {
+                        var tempStr = Gson().toJson(it?.response)
+                        Log.e("MainActivity", "--->" + tempStr)
+
+                    }
+            }
         }
 
     }
-
     private fun handleHomePageData(resource: Resource<HomePageDataWrapperVo>) {
-        resource.launch {
-            it?.apply {
-                it.appBizTypeList?.get(0)?.bizTypeName?.let { it1 -> KLog.e(it1) }
-            }
-        }
+//        resource.launch {
+//            it?.apply {
+//                it.appBizTypeList?.get(0)?.bizTypeName?.let { it1 -> KLog.e(it1) }
+//            }
+//        }
     }
 
 }

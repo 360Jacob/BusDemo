@@ -18,8 +18,9 @@ open class ModuleApplication : BaseApplication() {
     }
 
     private fun initNet() {
-//        var url = "https://demoapp.xmparking.net/"+"merchant_bus_web_app/bus/"
-        var url = "https://demoapp.xmparking.net/merchant_bus_web_app/bus/"
+        var url = "https://demoapp.xmparking.net/" + "merchant_bus_web_app/bus/"
+//        var url = "https://demoapp.xmparking.net/merchant_bus_web_app/bus/"
+//        var url = "https://demoapp.xmparking.net/xmbus_web_app/bus/"
         val config = NetConfig.Builder()
             .setBaseUrl(url)
             .addInterceptor(HeaderInterceptor())

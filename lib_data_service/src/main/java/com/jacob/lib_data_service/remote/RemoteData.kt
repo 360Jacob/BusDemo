@@ -40,8 +40,8 @@
 //
 //    override suspend fun queryHomePageBizData(): Flow<Resource<HomePageDataWrapperVo>> {
 //        retrofitManager.create<HomeService>()
-//        processCall(HomeService::queryHomePageBizData)
-//        return dealDataWhen()
+//
+//        return dealDataWhen(processCall(HomeService::queryHomePageBizData(param)))
 //    }
 //
 //    /**

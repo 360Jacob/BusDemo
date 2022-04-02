@@ -8,8 +8,9 @@ import com.jacob.lib_domain.entity.HomePageDataWrapperVo
 class QueryHomePageBizDataApi : BaseApi<HomePageDataWrapperVo>() {
 
     override suspend fun loadData(params: HashMap<String, String>): Resource<HomePageDataWrapperVo> {
-        var service = RetrofitManager().create<HomeService>()
-        var reps = service.queryHomePageBizData(params)
-        return dealDataWhen(reps)
+        return dealDataWhen(processCall {
+            RetrofitManager().create<HomeService>().queryHomePageBizData(params)
+        })
     }
+
 }

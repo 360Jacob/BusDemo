@@ -12,6 +12,7 @@ import com.jacob.lib_data_service.utils.NetworkHelper
 import com.jacob.lib_data_service.utils.ThreadUtils
 import com.jacob.lib_data_service.utils.ext.view.showToast
 import com.jacob.lib_domain.base.BaseResponse
+import com.jacob.lib_domain.entity.HomePageDataWrapperVo
 import com.jacob.lib_log.KLog
 import retrofit2.Response
 import java.io.IOException
@@ -88,4 +89,5 @@ abstract class BaseApi<T> {
       }
       return code
    }
+
 }

@@ -29,6 +29,9 @@ import com.google.gson.Gson
 import com.jacob.lib_data_service.dto.Resource
 import com.jacob.lib_domain.base.BaseResp
 import com.jacob.lib_domain.base.BaseResponse
+import okhttp3.ResponseBody.Companion.toResponseBody
+
+import okhttp3.RequestBody
 
 
 /**
@@ -48,7 +51,6 @@ class ResponseInterceptor : Interceptor {
         val request = chain.request()
         val response = chain.proceed(request)
         val body = bufferBody(response)
-
         // 网络相应不成功返回
         if (!response.isSuccessful) {
             val ex = ApiException(response.code)
@@ -62,22 +64,15 @@ class ResponseInterceptor : Interceptor {
             if (TextUtils.isEmpty(body) || "null".equals(body, ignoreCase = true)) {
                 throw ApiException(NULL_DATA, errorManager.getError(NULL_DATA).description)
             }
-           var respTemp = Gson().fromJson(body,BaseResp::class.java)
+//           var respTemp = Gson().fromJson(body,BaseResp::class.java)
             val jsonObject = JSONObject(body)
 
             val resp = jsonObject.getJSONObject("response")
             val status = resp.getInt("code")
             val message = resp.getString("msg")
-            Log.e(TAG, "--->"+body)
-            Log.e(TAG, "--->"+respTemp.response)
+
             if (0 == status) {
                 response.newBuilder()
-                    .body(
-                        ResponseBody.create(
-                            contentTypeValue.toMediaTypeOrNull(),
-                           Gson().toJson( respTemp.response)
-                        )
-                    )
                     .build()
             } else {
                 throw ApiException(status, message ?: "")
@@ -95,3 +90,5 @@ class ResponseInterceptor : Interceptor {
     }
 
 }
+
+

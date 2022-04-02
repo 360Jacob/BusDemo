@@ -9,6 +9,5 @@ import kotlinx.coroutines.flow.Flow
  * 服务端所有提供数据方法
  */
 internal interface RemoteDataSource {
-    //    suspend fun requestRecipes(): Resource<List<Demo>>
     suspend fun queryHomePageBizData(): Flow<Resource<HomePageDataWrapperVo>>
 }
